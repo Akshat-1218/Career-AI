@@ -11,8 +11,10 @@ import "../style/landing.scss";
 import "../style/landingSections.scss";
 
 const dockSections = ["home", "capabilities", "workflow"];
+const progressSections = ["home", "capabilities", "workflow", "showcase", "trust"];
 export default function LandingPage() {
   const [activeSection, setActiveSection] = useState("home");
+  const [activeProgressSection, setActiveProgressSection] = useState("home");
   useEffect(() => {
     const previousTitle = document.title;
     const description = document.querySelector('meta[name="description"]');
@@ -27,11 +29,14 @@ export default function LandingPage() {
     const updateActiveSection = () => {
       frameId = null;
       const activationLine = window.innerHeight * 0.42;
-      const nextSection = dockSections.reduce((active, id) => {
+      const getCurrentSection = (sections) => sections.reduce((active, id) => {
         const section = document.getElementById(id);
         return section && section.getBoundingClientRect().top <= activationLine ? id : active;
       }, "home");
+      const nextSection = getCurrentSection(dockSections);
+      const nextProgressSection = getCurrentSection(progressSections);
       setActiveSection((current) => current === nextSection ? current : nextSection);
+      setActiveProgressSection((current) => current === nextProgressSection ? current : nextProgressSection);
     };
     const scheduleUpdate = () => {
       if (frameId === null) frameId = window.requestAnimationFrame(updateActiveSection);
@@ -49,5 +54,5 @@ export default function LandingPage() {
     if (dockSections.includes(id)) setActiveSection(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  return <main className="landing-page"><LandingNetworkBackdrop /><LandingHero onExplore={() => scrollTo("capabilities")} /><LandingCapabilities /><LandingWorkflow /><ProductShowcase /><LandingTrust /><LandingFooter onSectionChange={scrollTo} /><FloatingLandingDock activeSection={activeSection} onSectionChange={scrollTo} /></main>;
+  return <main className="landing-page"><LandingNetworkBackdrop /><LandingHero activeSection={activeProgressSection} onExplore={() => scrollTo("capabilities")} /><LandingCapabilities /><LandingWorkflow /><ProductShowcase /><LandingTrust /><LandingFooter onSectionChange={scrollTo} /><FloatingLandingDock activeSection={activeSection} onSectionChange={scrollTo} /></main>;
 }

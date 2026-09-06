@@ -14,7 +14,7 @@ const rise = (delay, distance = 26) => ({
   animate: { opacity: 1, y: 0, transition: { delay, duration: .78, ease: [0.22, 1, .36, 1] } },
 });
 
-export default function LandingHero({ onExplore }) {
+export default function LandingHero({ activeSection, onExplore }) {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const reduceMotion = useReducedMotion();
@@ -30,7 +30,7 @@ export default function LandingHero({ onExplore }) {
   const statsOpacity = useTransform(scrollYProgress, [0, .12, .3, .62], [0, .05, .92, 1]);
 
   return <section ref={sectionRef} id="home" className="landing-hero landing-section" data-section="home">
-    <div className="landing-hero__index" aria-hidden="true"><b>01</b><span>02</span><span>03</span><span>04</span><span>05</span><i>/05</i></div>
+    <div className="landing-hero__index" aria-hidden="true">{["home", "capabilities", "workflow", "showcase", "trust"].map((section, index) => <span className={activeSection === section ? "is-active" : undefined} key={section}>{String(index + 1).padStart(2, "0")}</span>)}<i>/05</i></div>
     <div className="landing-hero__stage">
       <motion.div className="landing-hero__content" style={reduceMotion ? undefined : { y: compositionY, opacity: compositionOpacity, willChange: "transform, opacity" }}>
         <motion.p className="landing-eyebrow" {...rise(.22, 16)}><span>✧</span> AI-Powered Career Readiness</motion.p>
